@@ -9,7 +9,6 @@ public class Affine {
     private static final String alphabet = "абвгдежзийклмнопрстуфхцчшщьыэюя";
     private static final int mSqValue = alphabet.length()*alphabet.length();
 
-
     private static String [] freqRusBigrams = {"ст" , "но", "то", "на", "ен"};
     private static String [] freqCipherBigrams;
     private static int [] arrayA;
@@ -103,6 +102,8 @@ public class Affine {
         for (int i = 0; i < ciphertext.length()-1; i+=2) {
             cipherBigramNum[i / 2] = getNumberByBigram(ciphertext.charAt(i) + "" + ciphertext.charAt(i + 1));
         }
+
+        getFirstNBigrams(ciphertext, 5);
 
         int tempA, tempB;
         String tempX1, tempX2, tempY1, tempY2;
