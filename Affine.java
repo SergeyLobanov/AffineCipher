@@ -9,7 +9,6 @@ public class Affine {
     private static final String alphabet = "абвгдежзийклмнопрстуфхцчшщьыэюя";
     private static final int mSqValue = alphabet.length()*alphabet.length();
 
-
     private static String [] freqRusBigrams = {"ст" , "но", "то", "на", "ен"};
     private static String [] freqCipherBigrams;
     private static int [] arrayA;
@@ -104,13 +103,16 @@ public class Affine {
             cipherBigramNum[i / 2] = getNumberByBigram(ciphertext.charAt(i) + "" + ciphertext.charAt(i + 1));
         }
 
+        getFirstNBigrams(ciphertext, 5);
+
         int tempA, tempB;
         String tempX1, tempX2, tempY1, tempY2;
-        for (int x = 0; x < freqRusBigrams.length - 1; x++) {
-            tempX1 = freqRusBigrams[x];
-            tempX2 = freqRusBigrams[x+1];
+        for (int x = 0; x < freqRusBigrams.length*freqRusBigrams.length - 1; x++) {
+            if ((x / 5) == (x % 5)) continue;
+            tempX1 = freqRusBigrams[x / 5];
+            tempX2 = freqRusBigrams[x % 5];
             for (int y = 0; y < freqCipherBigrams.length*freqCipherBigrams.length; y++) {
-                if (y / 5 == y % 5) continue;
+                if ((y / 5) == (y % 5)) continue;
                 tempY1 = freqCipherBigrams[y / 5];
                 tempY2 = freqCipherBigrams[y % 5];
 
@@ -126,7 +128,7 @@ public class Affine {
                     for (int i = 0; i < cipherBigramNum.length; i++) {
                         result.append(getBigramByNumber(decipherBigram(cipherBigramNum[i], tempA, tempB, mSqValue)));
                     }
-                    //System.out.println(result);
+                    System.out.println(result);
 
                     if (isCorrectText(result.toString())) {
                         return result.toString();
@@ -199,17 +201,6 @@ public class Affine {
         return (HashMap<java.lang.Integer, java.lang.Double>)result;
     }
 
-    //optional
-    public static void printSortedFreq(String ciphertext) {
-        Map<Integer, Double> sortedMap = sortMapsByValue(countFrequency(ciphertext));
-        for(Map.Entry<Integer, Double> entry : sortedMap.entrySet()) {
-            System.out.println(entry.getKey() + "\t" + entry.getValue());
-            // to print with bigrams
-            //System.out.println(getBigramByNumber(entry.getKey()) + "\t" + entry.getValue());
-        }
-        System.out.println();
-    }
-
     //getting bigrams from our cipher
     public static void getFirstNBigrams(String ciphertext, int N) {
         freqCipherBigrams = new String[N];
@@ -222,6 +213,16 @@ public class Affine {
         }
     }
 
+    //optional
+    public static void printSortedFreq(String ciphertext) {
+        Map<Integer, Double> sortedMap = sortMapsByValue(countFrequency(ciphertext));
+        for(Map.Entry<Integer, Double> entry : sortedMap.entrySet()) {
+            System.out.println(entry.getKey() + "\t" + entry.getValue());
+            // to print with bigrams
+            //System.out.println(getBigramByNumber(entry.getKey()) + "\t" + entry.getValue());
+        }
+        System.out.println();
+    }
     //printing our bigrams
     public static void printFirstBigrams() {
         if (freqCipherBigrams == null) {
